@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Photo Enhancer</title>
+
+<title>AI Enhance - HD Photo Enhancer</title>
 
 <style>
 * {
@@ -13,152 +14,403 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #111827, #2563eb);
-  color: white;
+  background: linear-gradient(135deg, #07152f, #155eef, #6d28d9);
   min-height: 100vh;
+  color: white;
 }
 
-.container {
-  max-width: 500px;
-  margin: auto;
-  padding: 30px 18px;
+.header {
   text-align: center;
+  padding: 35px 15px 20px;
+}
+
+.logo {
+  font-size: 48px;
 }
 
 h1 {
-  font-size: 32px;
-  margin-bottom: 8px;
+  margin: 5px 0;
+  font-size: 34px;
 }
 
 .subtitle {
+  margin: 10px 0;
   color: #dbeafe;
-  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+.container {
+  max-width: 560px;
+  margin: auto;
+  padding: 10px 15px 40px;
 }
 
 .card {
-  background: white;
+  background: rgba(255,255,255,0.97);
   color: #111827;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+  border-radius: 24px;
+  padding: 22px;
+  box-shadow: 0 15px 40px rgba(0,0,0,.3);
 }
 
 .upload {
   display: block;
-  padding: 18px;
   border: 2px dashed #2563eb;
-  border-radius: 14px;
-  cursor: pointer;
+  border-radius: 18px;
+  padding: 25px 15px;
+  text-align: center;
   color: #2563eb;
   font-weight: bold;
-  margin-bottom: 15px;
+  cursor: pointer;
+  font-size: 18px;
+  background: #eff6ff;
 }
 
-input {
+.upload span {
+  display: block;
+  font-size: 42px;
+  margin-bottom: 8px;
+}
+
+input[type="file"] {
   display: none;
 }
 
-button {
+.controls {
+  margin-top: 20px;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.scale-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.scale {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #dbeafe;
+  background: white;
+  color: #2563eb;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.scale.active {
+  background: #2563eb;
+  color: white;
+}
+
+.enhance-btn {
   width: 100%;
+  margin-top: 20px;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(90deg,#2563eb,#7c3aed);
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.enhance-btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.preview {
+  display: none;
+  margin-top: 22px;
+}
+
+.preview-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.preview-box {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+.preview-box img,
+.preview-box canvas {
+  width: 100%;
+  display: block;
+}
+
+.preview-name {
+  padding: 8px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.status {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: bold;
+  color: #2563eb;
+}
+
+.download {
+  display: none;
+  width: 100%;
+  margin-top: 15px;
   padding: 15px;
   border: none;
-  border-radius: 12px;
-  background: #2563eb;
+  border-radius: 14px;
+  background: #16a34a;
   color: white;
   font-size: 17px;
   font-weight: bold;
   cursor: pointer;
-  margin-top: 10px;
 }
 
-button:disabled {
-  background: #9ca3af;
+.features {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+  margin-top: 18px;
 }
 
-canvas {
-  max-width: 100%;
-  margin-top: 20px;
+.feature {
+  background: #f3f4f6;
   border-radius: 12px;
-}
-
-#download {
-  display: none;
-  background: #16a34a;
-}
-
-#status {
-  margin-top: 15px;
+  padding: 12px 5px;
+  text-align: center;
+  font-size: 12px;
   font-weight: bold;
+}
+
+.feature div {
+  font-size: 22px;
+  margin-bottom: 5px;
+}
+
+.footer {
+  text-align: center;
+  color: #dbeafe;
+  font-size: 12px;
+  margin-top: 20px;
+}
+
+@media(max-width:420px) {
+  h1 {
+    font-size: 29px;
+  }
+
+  .card {
+    padding: 17px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="header">
+  <div class="logo">✨</div>
+  <h1>AI Photo Enhancer</h1>
+  <p class="subtitle">Make your photos HD, clear & sharper</p>
+</div>
 
-<h1>✨ AI Photo Enhancer</h1>
-<p class="subtitle">Make your photos clearer and sharper</p>
+<div class="container">
 
 <div class="card">
 
 <label class="upload" for="photo">
-  📷 Select Photo
+  <span>📷</span>
+  Select Photo
+  <small style="display:block;margin-top:6px;color:#64748b;">
+    JPG, PNG or WEBP
+  </small>
 </label>
 
 <input type="file" id="photo" accept="image/*">
 
-<button id="enhance" disabled>
+<div class="controls">
+
+<span class="label">HD Quality</span>
+
+<div class="scale-buttons">
+  <button class="scale active" data-scale="2">2× HD</button>
+  <button class="scale" data-scale="4">4× HD</button>
+</div>
+
+<button class="enhance-btn" id="enhance" disabled>
   ✨ Enhance Photo
 </button>
 
-<div id="status"></div>
+</div>
 
-<canvas id="canvas"></canvas>
+<div class="status" id="status">
+  Select a photo to start
+</div>
 
-<button id="download">
-  ⬇️ Download Enhanced Photo
-</button>
+<div class="preview" id="preview">
+
+<div class="preview-title">
+  🖼️ Before & After
+</div>
+
+<div class="images">
+
+<div class="preview-box">
+  <img id="original">
+  <div class="preview-name">Original</div>
+</div>
+
+<div class="preview-box">
+  <canvas id="result"></canvas>
+  <div class="preview-name">Enhanced HD</div>
+</div>
 
 </div>
+
+</div>
+
+<button class="download" id="download">
+  ⬇️ Download HD Photo
+</button>
+
+<div class="features">
+
+<div class="feature">
+<div>🔍</div>
+HD Upscale
+</div>
+
+<div class="feature">
+<div>✨</div>
+Sharpen
+</div>
+
+<div class="feature">
+<div>📱</div>
+Mobile Ready
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+  AI Enhance • Your photos stay in your browser
+</div>
+
 </div>
 
 <script>
+
 const photo = document.getElementById("photo");
 const enhance = document.getElementById("enhance");
-const canvas = document.getElementById("canvas");
+const original = document.getElementById("original");
+const canvas = document.getElementById("result");
+const preview = document.getElementById("preview");
 const download = document.getElementById("download");
 const status = document.getElementById("status");
 
 let image = new Image();
+let selectedScale = 2;
 
-photo.addEventListener("change", function() {
+/* Quality buttons */
 
-  if (!photo.files[0]) return;
+document.querySelectorAll(".scale").forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    document.querySelectorAll(".scale")
+      .forEach(b => b.classList.remove("active"));
+
+    button.classList.add("active");
+
+    selectedScale = Number(button.dataset.scale);
+
+  });
+
+});
+
+/* Photo selection */
+
+photo.addEventListener("change", () => {
+
+  if (!photo.files || !photo.files[0]) return;
 
   const file = photo.files[0];
+
+  if (!file.type.startsWith("image/")) {
+    status.textContent = "❌ Please select an image";
+    return;
+  }
+
   const url = URL.createObjectURL(file);
 
-  image.onload = function() {
+  image.onload = () => {
+
+    original.src = url;
+
+    preview.style.display = "block";
+
     enhance.disabled = false;
-    status.textContent = "Photo selected ✅";
+
+    download.style.display = "none";
+
+    status.textContent = "✅ Photo selected";
+
   };
 
   image.src = url;
+
 });
 
-enhance.addEventListener("click", function() {
+/* Enhancement */
 
-  status.textContent = "✨ Enhancing photo...";
+enhance.addEventListener("click", () => {
+
+  status.textContent = "✨ Enhancing your photo...";
+
+  enhance.disabled = true;
 
   setTimeout(() => {
 
     const ctx = canvas.getContext("2d");
 
-    const scale = 2;
+    let width = image.width * selectedScale;
+    let height = image.height * selectedScale;
 
-    canvas.width = image.width * scale;
-    canvas.height = image.height * scale;
+    /* Limit huge images for mobile performance */
+
+    const maxSize = 5000;
+
+    if (width > maxSize || height > maxSize) {
+
+      const ratio = Math.min(
+        maxSize / width,
+        maxSize / height
+      );
+
+      width = Math.floor(width * ratio);
+      height = Math.floor(height * ratio);
+
+    }
+
+    canvas.width = width;
+    canvas.height = height;
 
     ctx.imageSmoothingEnabled = true;
     ctx.imageSmoothingQuality = "high";
@@ -167,62 +419,104 @@ enhance.addEventListener("click", function() {
       image,
       0,
       0,
-      canvas.width,
-      canvas.height
+      width,
+      height
     );
 
-    // Sharpen effect
-    const imgData = ctx.getImageData(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+    /* Sharpen */
 
-    const data = imgData.data;
-    const copy = new Uint8ClampedArray(data);
+    try {
 
-    const w = canvas.width;
-    const h = canvas.height;
+      const img = ctx.getImageData(
+        0,
+        0,
+        width,
+        height
+      );
 
-    for (let y = 1; y < h - 1; y++) {
+      const data = img.data;
+      const copy = new Uint8ClampedArray(data);
 
-      for (let x = 1; x < w - 1; x++) {
+      const strength = 1.15;
 
-        const i = (y * w + x) * 4;
+      for (let y = 1; y < height - 1; y++) {
 
-        for (let c = 0; c < 3; c++) {
+        for (let x = 1; x < width - 1; x++) {
 
-          const value =
-            copy[i + c] * 5
-            - copy[i - 4 + c]
-            - copy[i + 4 + c]
-            - copy[i - w * 4 + c]
-            - copy[i + w * 4 + c];
+          const i = (y * width + x) * 4;
 
-          data[i + c] = Math.max(0, Math.min(255, value));
+          for (let c = 0; c < 3; c++) {
+
+            const center = copy[i + c];
+
+            const left =
+              copy[i - 4 + c];
+
+            const right =
+              copy[i + 4 + c];
+
+            const top =
+              copy[i - width * 4 + c];
+
+            const bottom =
+              copy[i + width * 4 + c];
+
+            const sharp =
+              center * (1 + 4 * strength)
+              - (left + right + top + bottom) * strength;
+
+            data[i + c] =
+              Math.max(
+                0,
+                Math.min(255, sharp)
+              );
+
+          }
+
         }
+
       }
+
+      ctx.putImageData(img,0,0);
+
+    } catch(error) {
+
+      console.log("Sharpen skipped");
+
     }
 
-    ctx.putImageData(imgData, 0, 0);
-
-    status.textContent = "✅ Photo enhanced successfully!";
+    status.textContent =
+      "✅ Enhanced successfully!";
 
     download.style.display = "block";
 
-  }, 800);
+    enhance.disabled = false;
+
+  }, 700);
+
 });
 
-download.addEventListener("click", function() {
+/* Download */
+
+download.addEventListener("click", () => {
 
   const link = document.createElement("a");
 
-  link.download = "enhanced-photo.png";
-  link.href = canvas.toDataURL("image/png");
+  link.download =
+    "AI-Enhanced-" +
+    Date.now() +
+    ".jpg";
+
+  link.href =
+    canvas.toDataURL(
+      "image/jpeg",
+      0.95
+    );
 
   link.click();
+
 });
+
 </script>
 
 </body>
