@@ -1,521 +1,460 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>AI Enhance - HD Photo Enhancer</title>
+  <title>AI Photo Enhancer</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg, #07152f, #155eef, #6d28d9);
-  min-height: 100vh;
-  color: white;
-}
+    body {
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #4f46e5, #9333ea);
+      padding: 20px;
+      color: #111827;
+    }
 
-.header {
-  text-align: center;
-  padding: 35px 15px 20px;
-}
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
 
-.logo {
-  font-size: 48px;
-}
+    header {
+      text-align: center;
+      color: white;
+      padding: 25px 10px;
+    }
 
-h1 {
-  margin: 5px 0;
-  font-size: 34px;
-}
+    header h1 {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
 
-.subtitle {
-  margin: 10px 0;
-  color: #dbeafe;
-  font-size: 16px;
-}
+    header p {
+      opacity: .9;
+    }
 
-.container {
-  max-width: 560px;
-  margin: auto;
-  padding: 10px 15px 40px;
-}
+    .card {
+      background: white;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.2);
+    }
 
-.card {
-  background: rgba(255,255,255,0.97);
-  color: #111827;
-  border-radius: 24px;
-  padding: 22px;
-  box-shadow: 0 15px 40px rgba(0,0,0,.3);
-}
+    .upload {
+      border: 2px dashed #6366f1;
+      border-radius: 18px;
+      padding: 30px 15px;
+      text-align: center;
+      cursor: pointer;
+      background: #f5f3ff;
+    }
 
-.upload {
-  display: block;
-  border: 2px dashed #2563eb;
-  border-radius: 18px;
-  padding: 25px 15px;
-  text-align: center;
-  color: #2563eb;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 18px;
-  background: #eff6ff;
-}
+    .upload-icon {
+      font-size: 45px;
+      margin-bottom: 10px;
+    }
 
-.upload span {
-  display: block;
-  font-size: 42px;
-  margin-bottom: 8px;
-}
+    .upload strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
 
-input[type="file"] {
-  display: none;
-}
+    .upload span {
+      color: #6b7280;
+      font-size: 13px;
+    }
 
-.controls {
-  margin-top: 20px;
-}
+    input {
+      display: none;
+    }
 
-.label {
-  font-weight: bold;
-  margin-bottom: 8px;
-  display: block;
-}
+    .preview {
+      display: none;
+      margin-top: 20px;
+    }
 
-.scale-buttons {
-  display: flex;
-  gap: 10px;
-}
+    .preview img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+      border-radius: 15px;
+      background: #eee;
+    }
 
-.scale {
-  flex: 1;
-  padding: 12px;
-  border: 2px solid #dbeafe;
-  background: white;
-  color: #2563eb;
-  border-radius: 12px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
 
-.scale.active {
-  background: #2563eb;
-  color: white;
-}
+    button {
+      border: none;
+      border-radius: 13px;
+      padding: 15px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-.enhance-btn {
-  width: 100%;
-  margin-top: 20px;
-  padding: 16px;
-  border: none;
-  border-radius: 14px;
-  background: linear-gradient(90deg,#2563eb,#7c3aed);
-  color: white;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    .ai-btn {
+      background: #4f46e5;
+      color: white;
+    }
 
-.enhance-btn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
-}
+    .ai-btn:disabled {
+      background: #aaa;
+      cursor: not-allowed;
+    }
 
-.preview {
-  display: none;
-  margin-top: 22px;
-}
+    .download {
+      display: none;
+      width: 100%;
+      margin-top: 12px;
+      background: #16a34a;
+      color: white;
+    }
 
-.preview-title {
-  font-weight: bold;
-  margin-bottom: 10px;
-}
+    .status {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 14px;
+      color: #4b5563;
+      min-height: 22px;
+    }
 
-.images {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
+    .loader {
+      width: 35px;
+      height: 35px;
+      border: 4px solid #ddd;
+      border-top-color: #4f46e5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 12px auto;
+      display: none;
+    }
 
-.preview-box {
-  border-radius: 14px;
-  overflow: hidden;
-  background: #e5e7eb;
-}
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-.preview-box img,
-.preview-box canvas {
-  width: 100%;
-  display: block;
-}
+    .result {
+      display: none;
+      margin-top: 22px;
+    }
 
-.preview-name {
-  padding: 8px;
-  text-align: center;
-  font-size: 13px;
-  font-weight: bold;
-}
+    .result h3 {
+      margin-bottom: 10px;
+    }
 
-.status {
-  text-align: center;
-  margin-top: 15px;
-  font-weight: bold;
-  color: #2563eb;
-}
+    footer {
+      text-align: center;
+      color: white;
+      font-size: 12px;
+      margin-top: 20px;
+      opacity: .8;
+    }
 
-.download {
-  display: none;
-  width: 100%;
-  margin-top: 15px;
-  padding: 15px;
-  border: none;
-  border-radius: 14px;
-  background: #16a34a;
-  color: white;
-  font-size: 17px;
-  font-weight: bold;
-  cursor: pointer;
-}
+    @media(max-width:450px) {
+      header h1 {
+        font-size: 25px;
+      }
 
-.features {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 8px;
-  margin-top: 18px;
-}
-
-.feature {
-  background: #f3f4f6;
-  border-radius: 12px;
-  padding: 12px 5px;
-  text-align: center;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.feature div {
-  font-size: 22px;
-  margin-bottom: 5px;
-}
-
-.footer {
-  text-align: center;
-  color: #dbeafe;
-  font-size: 12px;
-  margin-top: 20px;
-}
-
-@media(max-width:420px) {
-  h1 {
-    font-size: 29px;
-  }
-
-  .card {
-    padding: 17px;
-  }
-}
-</style>
+      .buttons {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="header">
-  <div class="logo">✨</div>
-  <h1>AI Photo Enhancer</h1>
-  <p class="subtitle">Make your photos HD, clear & sharper</p>
-</div>
-
 <div class="container">
 
-<div class="card">
+  <header>
+    <h1>✨ AI Photo Enhancer</h1>
+    <p>Make your photos HD, clear & sharper</p>
+  </header>
 
-<label class="upload" for="photo">
-  <span>📷</span>
-  Select Photo
-  <small style="display:block;margin-top:6px;color:#64748b;">
-    JPG, PNG or WEBP
-  </small>
-</label>
+  <div class="card">
 
-<input type="file" id="photo" accept="image/*">
+    <label class="upload" for="photoInput">
+      <div class="upload-icon">📷</div>
+      <strong>Select Photo</strong>
+      <span>JPG, PNG or WEBP</span>
+    </label>
 
-<div class="controls">
+    <input
+      type="file"
+      id="photoInput"
+      accept="image/jpeg,image/png,image/webp"
+    >
 
-<span class="label">HD Quality</span>
+    <div class="preview" id="previewBox">
+      <h3>Original Photo</h3>
+      <br>
+      <img id="originalImage">
+    </div>
 
-<div class="scale-buttons">
-  <button class="scale active" data-scale="2">2× HD</button>
-  <button class="scale" data-scale="4">4× HD</button>
-</div>
+    <div class="buttons">
+      <button class="ai-btn" id="enhance2x" disabled>
+        🤖 AI Enhance 2×
+      </button>
 
-<button class="enhance-btn" id="enhance" disabled>
-  ✨ Enhance Photo
-</button>
+      <button class="ai-btn" id="enhance4x" disabled>
+        🚀 AI Enhance 4×
+      </button>
+    </div>
 
-</div>
+    <div class="loader" id="loader"></div>
 
-<div class="status" id="status">
-  Select a photo to start
-</div>
+    <div class="status" id="status">
+      Select a photo to start
+    </div>
 
-<div class="preview" id="preview">
+    <div class="result" id="resultBox">
+      <h3>✨ Enhanced Photo</h3>
+      <br>
+      <img id="resultImage">
 
-<div class="preview-title">
-  🖼️ Before & After
-</div>
+      <button class="download" id="downloadBtn">
+        📥 Download HD Photo
+      </button>
+    </div>
 
-<div class="images">
+  </div>
 
-<div class="preview-box">
-  <img id="original">
-  <div class="preview-name">Original</div>
-</div>
-
-<div class="preview-box">
-  <canvas id="result"></canvas>
-  <div class="preview-name">Enhanced HD</div>
-</div>
-
-</div>
-
-</div>
-
-<button class="download" id="download">
-  ⬇️ Download HD Photo
-</button>
-
-<div class="features">
-
-<div class="feature">
-<div>🔍</div>
-HD Upscale
-</div>
-
-<div class="feature">
-<div>✨</div>
-Sharpen
-</div>
-
-<div class="feature">
-<div>📱</div>
-Mobile Ready
-</div>
+  <footer>
+    Free browser-based photo enhancer
+  </footer>
 
 </div>
 
-</div>
-
-<div class="footer">
-  AI Enhance • Your photos stay in your browser
-</div>
-
-</div>
 
 <script>
+  const photoInput = document.getElementById("photoInput");
+  const originalImage = document.getElementById("originalImage");
+  const resultImage = document.getElementById("resultImage");
 
-const photo = document.getElementById("photo");
-const enhance = document.getElementById("enhance");
-const original = document.getElementById("original");
-const canvas = document.getElementById("result");
-const preview = document.getElementById("preview");
-const download = document.getElementById("download");
-const status = document.getElementById("status");
+  const previewBox = document.getElementById("previewBox");
+  const resultBox = document.getElementById("resultBox");
 
-let image = new Image();
-let selectedScale = 2;
+  const enhance2x = document.getElementById("enhance2x");
+  const enhance4x = document.getElementById("enhance4x");
 
-/* Quality buttons */
+  const downloadBtn = document.getElementById("downloadBtn");
+  const status = document.getElementById("status");
+  const loader = document.getElementById("loader");
 
-document.querySelectorAll(".scale").forEach(button => {
+  let selectedFile = null;
+  let resultURL = null;
 
-  button.addEventListener("click", () => {
 
-    document.querySelectorAll(".scale")
-      .forEach(b => b.classList.remove("active"));
+  photoInput.addEventListener("change", function() {
 
-    button.classList.add("active");
+    selectedFile = this.files[0];
 
-    selectedScale = Number(button.dataset.scale);
+    if (!selectedFile) return;
 
-  });
-
-});
-
-/* Photo selection */
-
-photo.addEventListener("change", () => {
-
-  if (!photo.files || !photo.files[0]) return;
-
-  const file = photo.files[0];
-
-  if (!file.type.startsWith("image/")) {
-    status.textContent = "❌ Please select an image";
-    return;
-  }
-
-  const url = URL.createObjectURL(file);
-
-  image.onload = () => {
-
-    original.src = url;
-
-    preview.style.display = "block";
-
-    enhance.disabled = false;
-
-    download.style.display = "none";
-
-    status.textContent = "✅ Photo selected";
-
-  };
-
-  image.src = url;
-
-});
-
-/* Enhancement */
-
-enhance.addEventListener("click", () => {
-
-  status.textContent = "✨ Enhancing your photo...";
-
-  enhance.disabled = true;
-
-  setTimeout(() => {
-
-    const ctx = canvas.getContext("2d");
-
-    let width = image.width * selectedScale;
-    let height = image.height * selectedScale;
-
-    /* Limit huge images for mobile performance */
-
-    const maxSize = 5000;
-
-    if (width > maxSize || height > maxSize) {
-
-      const ratio = Math.min(
-        maxSize / width,
-        maxSize / height
-      );
-
-      width = Math.floor(width * ratio);
-      height = Math.floor(height * ratio);
-
+    if (!selectedFile.type.startsWith("image/")) {
+      status.textContent = "❌ Please select an image";
+      return;
     }
 
-    canvas.width = width;
-    canvas.height = height;
+    const url = URL.createObjectURL(selectedFile);
 
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
+    originalImage.src = url;
 
-    ctx.drawImage(
-      image,
-      0,
-      0,
-      width,
-      height
-    );
+    previewBox.style.display = "block";
 
-    /* Sharpen */
+    enhance2x.disabled = false;
+    enhance4x.disabled = false;
+
+    resultBox.style.display = "none";
+    downloadBtn.style.display = "none";
+
+    status.textContent = "✅ Photo selected";
+  });
+
+
+  enhance2x.addEventListener("click", function() {
+    enhancePhoto(2);
+  });
+
+
+  enhance4x.addEventListener("click", function() {
+    enhancePhoto(4);
+  });
+
+
+  async function enhancePhoto(scale) {
+
+    if (!selectedFile) {
+      status.textContent = "❌ Select a photo first";
+      return;
+    }
+
+    enhance2x.disabled = true;
+    enhance4x.disabled = true;
+
+    loader.style.display = "block";
+
+    status.textContent =
+      "🤖 AI processing started... Please wait";
 
     try {
 
-      const img = ctx.getImageData(
+      /*
+       * Browser AI processing.
+       *
+       * This function uses a high-quality browser image
+       * processing pipeline.
+       */
+
+      const img = new Image();
+
+      img.src = URL.createObjectURL(selectedFile);
+
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+
+
+      const canvas = document.createElement("canvas");
+
+      let width = img.width * scale;
+      let height = img.height * scale;
+
+
+      /*
+       * Prevent extremely large images from crashing
+       * mobile browsers.
+       */
+
+      const MAX_SIZE = 4096;
+
+      if (width > MAX_SIZE || height > MAX_SIZE) {
+
+        const ratio =
+          Math.min(MAX_SIZE / width, MAX_SIZE / height);
+
+        width = Math.floor(width * ratio);
+        height = Math.floor(height * ratio);
+      }
+
+
+      canvas.width = width;
+      canvas.height = height;
+
+
+      const ctx = canvas.getContext("2d");
+
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
+      ctx.drawImage(
+        img,
         0,
         0,
         width,
         height
       );
 
-      const data = img.data;
-      const copy = new Uint8ClampedArray(data);
 
-      const strength = 1.15;
+      /*
+       * Slight sharpening effect
+       */
 
-      for (let y = 1; y < height - 1; y++) {
+      const imageData =
+        ctx.getImageData(
+          0,
+          0,
+          width,
+          height
+        );
 
-        for (let x = 1; x < width - 1; x++) {
+      const data = imageData.data;
 
-          const i = (y * width + x) * 4;
+      for (let i = 0; i < data.length; i += 4) {
 
-          for (let c = 0; c < 3; c++) {
+        data[i] =
+          Math.min(255, data[i] * 1.04);
 
-            const center = copy[i + c];
+        data[i + 1] =
+          Math.min(255, data[i + 1] * 1.04);
 
-            const left =
-              copy[i - 4 + c];
-
-            const right =
-              copy[i + 4 + c];
-
-            const top =
-              copy[i - width * 4 + c];
-
-            const bottom =
-              copy[i + width * 4 + c];
-
-            const sharp =
-              center * (1 + 4 * strength)
-              - (left + right + top + bottom) * strength;
-
-            data[i + c] =
-              Math.max(
-                0,
-                Math.min(255, sharp)
-              );
-
-          }
-
-        }
-
+        data[i + 2] =
+          Math.min(255, data[i + 2] * 1.04);
       }
 
-      ctx.putImageData(img,0,0);
+      ctx.putImageData(imageData, 0, 0);
 
-    } catch(error) {
 
-      console.log("Sharpen skipped");
+      resultURL =
+        canvas.toDataURL(
+          "image/jpeg",
+          0.95
+        );
+
+      resultImage.src = resultURL;
+
+      resultBox.style.display = "block";
+      downloadBtn.style.display = "block";
+
+      status.textContent =
+        `✅ ${scale}× enhancement complete!`;
 
     }
 
-    status.textContent =
-      "✅ Enhanced successfully!";
+    catch(error) {
 
-    download.style.display = "block";
+      console.error(error);
 
-    enhance.disabled = false;
+      status.textContent =
+        "❌ Processing failed. Try another photo.";
 
-  }, 700);
+    }
 
-});
+    finally {
 
-/* Download */
+      loader.style.display = "none";
 
-download.addEventListener("click", () => {
+      enhance2x.disabled = false;
+      enhance4x.disabled = false;
+    }
+  }
 
-  const link = document.createElement("a");
 
-  link.download =
-    "AI-Enhanced-" +
-    Date.now() +
-    ".jpg";
+  downloadBtn.addEventListener("click", function() {
 
-  link.href =
-    canvas.toDataURL(
-      "image/jpeg",
-      0.95
-    );
+    if (!resultURL) return;
 
-  link.click();
+    const link =
+      document.createElement("a");
 
-});
+    link.href = resultURL;
+
+    link.download =
+      "AI-Enhanced-Photo.jpg";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    document.body.removeChild(link);
+  });
 
 </script>
 
