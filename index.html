@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Photo Enhancer</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #111827, #2563eb);
+  color: white;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 30px 18px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #dbeafe;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: white;
+  color: #111827;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
+
+.upload {
+  display: block;
+  padding: 18px;
+  border: 2px dashed #2563eb;
+  border-radius: 14px;
+  cursor: pointer;
+  color: #2563eb;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+input {
+  display: none;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #2563eb;
+  color: white;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:disabled {
+  background: #9ca3af;
+}
+
+canvas {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 12px;
+}
+
+#download {
+  display: none;
+  background: #16a34a;
+}
+
+#status {
+  margin-top: 15px;
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>✨ AI Photo Enhancer</h1>
+<p class="subtitle">Make your photos clearer and sharper</p>
+
+<div class="card">
+
+<label class="upload" for="photo">
+  📷 Select Photo
+</label>
+
+<input type="file" id="photo" accept="image/*">
+
+<button id="enhance" disabled>
+  ✨ Enhance Photo
+</button>
+
+<div id="status"></div>
+
+<canvas id="canvas"></canvas>
+
+<button id="download">
+  ⬇️ Download Enhanced Photo
+</button>
+
+</div>
+</div>
+
+<script>
+const photo = document.getElementById("photo");
+const enhance = document.getElementById("enhance");
+const canvas = document.getElementById("canvas");
+const download = document.getElementById("download");
+const status = document.getElementById("status");
+
+let image = new Image();
+
+photo.addEventListener("change", function() {
+
+  if (!photo.files[0]) return;
+
+  const file = photo.files[0];
+  const url = URL.createObjectURL(file);
+
+  image.onload = function() {
+    enhance.disabled = false;
+    status.textContent = "Photo selected ✅";
+  };
+
+  image.src = url;
+});
+
+enhance.addEventListener("click", function() {
+
+  status.textContent = "✨ Enhancing photo...";
+
+  setTimeout(() => {
+
+    const ctx = canvas.getContext("2d");
+
+    const scale = 2;
+
+    canvas.width = image.width * scale;
+    canvas.height = image.height * scale;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+
+    ctx.drawImage(
+      image,
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    // Sharpen effect
+    const imgData = ctx.getImageData(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    const data = imgData.data;
+    const copy = new Uint8ClampedArray(data);
+
+    const w = canvas.width;
+    const h = canvas.height;
+
+    for (let y = 1; y < h - 1; y++) {
+
+      for (let x = 1; x < w - 1; x++) {
+
+        const i = (y * w + x) * 4;
+
+        for (let c = 0; c < 3; c++) {
+
+          const value =
+            copy[i + c] * 5
+            - copy[i - 4 + c]
+            - copy[i + 4 + c]
+            - copy[i - w * 4 + c]
+            - copy[i + w * 4 + c];
+
+          data[i + c] = Math.max(0, Math.min(255, value));
+        }
+      }
+    }
+
+    ctx.putImageData(imgData, 0, 0);
+
+    status.textContent = "✅ Photo enhanced successfully!";
+
+    download.style.display = "block";
+
+  }, 800);
+});
+
+download.addEventListener("click", function() {
+
+  const link = document.createElement("a");
+
+  link.download = "enhanced-photo.png";
+  link.href = canvas.toDataURL("image/png");
+
+  link.click();
+});
+</script>
+
+</body>
+</html>
